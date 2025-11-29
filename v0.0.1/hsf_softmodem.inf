@@ -1,0 +1,36 @@
+; hsf_softmodem.inf - Unimodem INF for virtual modem
+[v0.0.1]
+Signature="$WINDOWS NT$"
+Class=Modem
+ClassGUID={4D36E96D-E325-11CE-BFC1-08002BE10318}
+Provider=%whispr.dev%
+DriverVer=11/29/2025,1.0.0.0
+
+[Manufacturer]
+%whispr.dev%=Models,NTamd64
+
+[Models.NTamd64]
+%woflmodem%=Modem,HSF_SOFTMODEM
+
+[Modem.NT]
+Include=mdmcpq.inf
+CopyFiles=
+
+[Modem.NT.Services]
+Include=mdmcpq.inf
+AddService=Modem,0x00000002,LowerFilter_Service_Inst,
+
+[Modem.NT.HW]
+AddReg=LowerFilterAddReg
+
+[LowerFilterAddReg]
+HKR,,"LowerFilters",0x00010000,"SerialMouse"
+
+[Modem.NT.CoInstallers]
+Include=mdmcpq.inf
+CopyFiles=
+
+[Strings]
+ManufacturerName="Rust HSF Softmodem"
+ModemName="HSF Softmodem (Virtual)"
+

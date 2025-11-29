@@ -1,0 +1,36 @@
+// src/main.rs
+mod audio;
+
+use audio::{WasapiAudioEngine, ModemAudioConfig, AudioEvent};
+use std::time::Duration;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env_logger::init();
+    
+    let config = ModemAudioConfig::default();
+    let mut engine = WasapiAudioEngine::new(config)?;
+    
+    engine.initialize()?;
+    engine.start()?;
+    
+    println!("Audio engine running - capturing line-in, echoing to line-out...");
+    println!("Press Ctrl+C to stop");
+    
+    // Simple echo test: capture -> playback
+    loop {
+        std::thread::sleep(Duration::from_millis(10));
+        
+        for event in engine.poll_events() {
+            match event {
+                AudioEvent::CapturedSamples(samples) => {
+                    // Echo captured audio back to output
+                    engine.queue_playback(samples);
+                }
+                AudioEvent::Error(e) => {
+                    eprintln!("Audio error: {}", e);
+                }
+                _ => {}
+            }
+        }
+    }
+}
