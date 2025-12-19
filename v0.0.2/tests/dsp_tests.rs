@@ -138,7 +138,7 @@ fn test_dtmf_generator() {
 fn test_fsk_loopback_bell103() {
     let mode = FSKMode::Bell103Originate;
     let baud_rate = 300.0;
-    let sample_rate = 8000.0;
+    let sample_rate = 9600.0;
     
     let mut modulator = FSKModulator::new(mode, baud_rate, sample_rate);
     let mut demodulator = FSKDemodulator::new(mode, baud_rate, sample_rate);
@@ -166,7 +166,7 @@ fn test_fsk_loopback_bell103() {
 fn test_fsk_byte_loopback() {
     let mode = FSKMode::Bell103Originate;
     let baud_rate = 300.0;
-    let sample_rate = 8000.0;
+    let sample_rate = 9600.0;
     
     let mut modulator = FSKModulator::new(mode, baud_rate, sample_rate);
     let mut demodulator = FSKDemodulator::new(mode, baud_rate, sample_rate);

@@ -25,8 +25,8 @@ fn add_awgn(signal: &[f32], snr_db: f32) -> Vec<f32> {
 #[test]
 fn test_fsk_ber_clean_channel() {
     let mode = FSKMode::Bell103Originate;
-    let mut modulator = FSKModulator::new(mode, 300.0, 8000.0);
-    let mut demodulator = FSKDemodulator::new(mode, 300.0, 8000.0);
+    let mut modulator = FSKModulator::new(mode, 300.0, 9600.0);
+    let mut demodulator = FSKDemodulator::new(mode, 300.0, 9600.0);
     
     // Generate 1000 random bits
     let mut rng = rand::thread_rng();
@@ -39,12 +39,14 @@ fn test_fsk_ber_clean_channel() {
     let received = demodulator.demodulate(&audio);
     
     // Calculate BER [web:100][web:101]
+    let n = test_bits.len().min(received.len());
     let errors = test_bits.iter()
-        .zip(received.iter())
+        .take(n)
+        .zip(received.iter().take(n))
         .filter(|(&a, &b)| a != b)
         .count();
-    
-    let ber = errors as f32 / test_bits.len() as f32;
+
+    let ber = errors as f32 / n as f32;
     
     println!("FSK BER (clean channel): {:.6} ({} errors / {} bits)", 
         ber, errors, test_bits.len());
@@ -58,8 +60,8 @@ fn test_fsk_ber_with_noise() {
     
     for snr_db in snr_values {
         let mode = FSKMode::Bell103Originate;
-        let mut modulator = FSKModulator::new(mode, 300.0, 8000.0);
-        let mut demodulator = FSKDemodulator::new(mode, 300.0, 8000.0);
+        let mut modulator = FSKModulator::new(mode, 300.0, 9600.0);
+        let mut demodulator = FSKDemodulator::new(mode, 300.0, 9600.0);
         
         // Generate test data
         let mut rng = rand::thread_rng();
